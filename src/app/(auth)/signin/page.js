@@ -1,0 +1,201 @@
+'use client';
+
+import React, { useState } from 'react';
+import { Eye, EyeOff, Key, Car, Facebook, Gauge, MapPin } from 'lucide-react';
+import Link from 'next/link';
+import axios from 'axios';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from 'react-toastify';
+// import { useRouter } from 'next/router';
+
+// Simple Google Icon Component
+const GoogleIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+  </svg>
+);
+
+// Simple Apple Icon Component
+const AppleIcon = () => (
+  <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.05 20.28c-.98.95-2.05.87-3.08.48-1.06-.37-2.09-.37-3.2 0-1.39.46-2.25.32-3.08-.48-2.67-2.5-3.79-7.25-1.58-10.21 1.08-1.45 2.76-2.32 4.14-2.32 1.34 0 2.21.75 3.01.75.8 0 2.19-.75 3.44-.75 1.19 0 2.45.67 3.34 1.76-2.82 1.57-2.37 5.89.56 7.15-.6 1.45-1.37 2.65-2.55 3.62zM12.03 7.25c-.15-2.23 1.69-4.08 3.84-4.25.17 2.42-2.17 4.29-3.84 4.25z" />
+  </svg>
+);
+
+export default function Signin(){
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const router = useRouter()
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await signIn('credentials',{
+            email,
+            password,
+            redirect: false,
+        })
+        if (response?.error) {
+            console.log("Error:", response.error);
+            // Handle error (e.g., show toast)
+        } else {
+            console.log("Success:", response);
+            toast.success('logging in...')
+            router.push('/'); // Redirect to home
+        }
+        
+        console.log("Signing in with:", email, password);
+    } catch (error) {
+        console.log({'message': error });
+        toast.error('wrong credentials')
+        
+    }
+  };
+
+  return (
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0a0a16] font-sans selection:bg-purple-500 selection:text-white">
+      <ToastContainer/>
+      
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e] opacity-80 z-0"></div>
+
+      <div className="absolute bottom-[-40%] left-[-20%] w-[140%] h-[80%] rounded-[100%] bg-purple-900 blur-[100px] opacity-60 z-0"></div>
+      <div className="absolute bottom-[-40%] left-[-10%] w-[120%] h-[70%] rounded-[100%] bg-indigo-600 blur-[80px] opacity-40 z-0 animate-pulse"></div>
+
+      <div className="absolute top-10 left-10 w-1 h-1 bg-white rounded-full opacity-70 animate-ping"></div>
+      <div className="absolute top-40 right-20 w-1 h-1 bg-white rounded-full opacity-50"></div>
+      <div className="absolute bottom-20 left-1/4 w-1 h-1 bg-white rounded-full opacity-60"></div>
+      
+      <div className="absolute top-1/2 left-0 w-32 h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-20 transform -rotate-45"></div>
+      <div className="absolute bottom-10 right-0 w-48 h-[1px] bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-20 transform -rotate-12"></div>
+      <div className="absolute top-20 right-1/4 w-24 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-10 transform rotate-45"></div>
+
+      
+      <div className="absolute bottom-[20%] left-[10%] text-indigo-400 opacity-40 animate-bounce delay-1000 z-0 duration-[4000ms]">
+         <Gauge size={48} className="transform -rotate-12 drop-shadow-[0_0_15px_rgba(129,140,248,0.3)]" />
+      </div>
+
+      <div className="absolute top-[15%] right-[25%] text-pink-400 opacity-40 animate-pulse delay-500 z-0 duration-[3000ms]">
+         <MapPin size={36} className="transform rotate-12 drop-shadow-[0_0_15px_rgba(244,114,182,0.3)]" />
+      </div>
+
+      <div className="absolute top-1/4 left-[15%] text-cyan-300 opacity-60 animate-bounce delay-700 z-0">
+         <Key size={32} className="transform -rotate-45 drop-shadow-[0_0_10px_rgba(103,232,249,0.5)]" />
+      </div>
+      <div className="absolute top-[20%] right-[15%] text-purple-300 opacity-60 animate-bounce delay-100 z-0">
+         <Key size={28} className="transform rotate-12 drop-shadow-[0_0_10px_rgba(216,180,254,0.5)]" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-xl p-1 ">
+        
+        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-cyan-400 rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+            <div className="relative bg-gradient-to-b from-gray-800 to-black p-4 rounded-2xl border border-white/10 shadow-2xl">
+               <Car size={50} className="text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-900/40 backdrop-blur-xs border border-white/10 rounded-3xl p-8 pt-12 shadow-2xl w-full">
+          
+          <div className="text-center mb-8 mt-4">
+            <h1 className="text-3xl font-bold text-white mb-2 tracking-wide">Welcome back to <span className='text-yellow-400'>Go</span>Drive</h1>
+            <p className="text-gray-400 text-xs px-4 leading-relaxed">
+                Please Sign in to your account to continue
+            </p>
+          </div>
+
+          <form onSubmit={handleSignIn} className="space-y-5">
+            
+           
+
+            <div className="space-y-1">
+              <label className="text-gray-300 text-sm font-medium ml-1">Email Address</label>
+              <div className="relative group">
+                <input
+                  type="email"
+                  placeholder="e.g. user@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-[#13132b]/60 border border-gray-600/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all duration-300 mt-2"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <label className="text-gray-300 text-sm font-medium ml-1 ">Password</label>
+              <div className="relative group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-[#13132b]/60 border border-gray-600/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all duration-300 pr-10 mt-2"
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold py-3.5 rounded-xl shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] transform hover:-translate-y-0.5 transition-all duration-300"
+            >
+              SIGN IN
+            </button>
+
+            <div className="flex items-center justify-between text-xs sm:text-sm pt-2">
+              <a href="#" className="text-indigo-400 hover:text-indigo-300 transition-colors">
+                Forgot Password?
+              </a>
+              <p className="text-gray-400">
+                Don't have an account?{" "}
+                <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+                  Sign Up
+                </Link>
+              </p>
+            </div>
+          </form>
+
+          <div className="mt-8">
+            <div className='flex items-center justify-center'>
+                <div className='w-[150px] h-0.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500'></div>
+                <h1 className='text-white text-center my-4 mx-5'>or login with</h1>
+                <div className='w-[150px] h-0.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500'></div>
+
+            </div>
+            <div className="flex justify-center gap-6">
+              <button
+            onClick={() => signIn('google',{callbackUrl : '/'})}
+              className="w-12 h-12 rounded-full bg-[#1a1a2e] border border-gray-700 hover:border-gray-500 flex items-center justify-center transition-all duration-300 hover:bg-[#252540] group">
+              
+                <GoogleIcon />
+              </button>
+              <button className="w-12 h-12 rounded-full bg-[#1a1a2e] border border-gray-700 hover:border-gray-500 flex items-center justify-center transition-all duration-300 hover:bg-[#252540] group">
+                <AppleIcon />
+              </button>
+              <button className="w-12 h-12 rounded-full bg-[#1a1a2e] border border-gray-700 hover:border-gray-500 flex items-center justify-center transition-all duration-300 hover:bg-[#252540] group">
+                <Facebook className="w-5 h-5 text-blue-500" fill="currentColor" />
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  )
+}
